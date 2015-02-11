@@ -1,5 +1,4 @@
 jQuery(document).ready(function($) {
-
 	/**
 	 * set up the buttons on the entire form
 	 */
@@ -155,13 +154,33 @@ jQuery(document).ready(function($) {
 	    }
 
 	    // prevent bubbling up to parent repeater rowset
-	    event.stopPropagation();
+	    	event.stopPropagation();
+	}
+	function acfRepeaterToggleAllInit() {
+		$rowsetWrapper = $('.acf-repeater');
+
+		// select either nested or unnested repeater rows, not both
+		if( true === $rowsetWrapper.data('acf-repeater-nested') ) {
+			$rows = $('.acf-row:data(acf-repeater-nested),.layout', $rowsetWrapper);
+		} else {
+			$rows = $('.acf-row,.layout', $rowsetWrapper).not(':data(acf-repeater-nested)');
+		}
+	    
+	    // toggle repeater state and all rows
+	    if( true !== $rowsetWrapper.data('acf-rowset-collapsed') ) {
+	    	acfRepeaterCollapseRowset( $rowsetWrapper );
+	    	acfRepeaterCollapseRow( $rows );
+	    } else {
+	    	acfRepeaterExpandRowset( $rowsetWrapper );
+	    	acfRepeaterExpandRow( $rows );
+	    }
 	}
 
 	/**
 	 * toggles single repeater row or flexible field
 	 */
 	function acfRepeaterToggleSingle(event) {
+		console.log('hgere');
 		$rowButton = $(this);
 		$rowButtonText = $('.screen-reader-text', $rowButton);
 		$row = $rowButton.closest('.acf-row,.layout');
@@ -212,4 +231,6 @@ jQuery(document).ready(function($) {
 	// Initiatilize the plugin
 	acfRepeaterCollapserInit();
 
+	/* Collapse all by default */
+	acfRepeaterToggleAllInit();
 });
